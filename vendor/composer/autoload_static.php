@@ -11,6 +11,10 @@ class ComposerStaticInit5082c822961c36012969646d7996a1af
     );
 
     public static $prefixLengthsPsr4 = array (
+        'T' => 
+        array (
+            'Twig\\' => 5,
+        ),
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -19,6 +23,7 @@ class ComposerStaticInit5082c822961c36012969646d7996a1af
             'Symfony\\Component\\HttpFoundation\\' => 33,
             'Symfony\\Component\\EventDispatcher\\' => 34,
             'Symfony\\Component\\Debug\\' => 24,
+            'Symfony\\Bridge\\Twig\\' => 20,
             'Silex\\' => 6,
         ),
         'P' => 
@@ -26,9 +31,26 @@ class ComposerStaticInit5082c822961c36012969646d7996a1af
             'Psr\\Log\\' => 8,
             'Psr\\Container\\' => 14,
         ),
+        'D' => 
+        array (
+            'Doctrine\\Common\\Inflector\\' => 26,
+            'Doctrine\\Common\\Cache\\' => 22,
+            'Doctrine\\Common\\Annotations\\' => 28,
+            'Doctrine\\Common\\' => 16,
+        ),
+        'A' => 
+        array (
+            'App\\Pokemon\\Repository\\' => 23,
+            'App\\Pokemon\\Entity\\' => 19,
+            'App\\Pokemon\\Controller\\' => 23,
+        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'Twig\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/twig/twig/src',
+        ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
@@ -53,6 +75,10 @@ class ComposerStaticInit5082c822961c36012969646d7996a1af
         array (
             0 => __DIR__ . '/..' . '/symfony/debug',
         ),
+        'Symfony\\Bridge\\Twig\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/twig-bridge',
+        ),
         'Silex\\' => 
         array (
             0 => __DIR__ . '/..' . '/silex/silex/src/Silex',
@@ -65,14 +91,64 @@ class ComposerStaticInit5082c822961c36012969646d7996a1af
         array (
             0 => __DIR__ . '/..' . '/psr/container/src',
         ),
+        'Doctrine\\Common\\Inflector\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/inflector/lib/Doctrine/Common/Inflector',
+        ),
+        'Doctrine\\Common\\Cache\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/cache/lib/Doctrine/Common/Cache',
+        ),
+        'Doctrine\\Common\\Annotations\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/annotations/lib/Doctrine/Common/Annotations',
+        ),
+        'Doctrine\\Common\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/doctrine/common/lib/Doctrine/Common',
+        ),
+        'App\\Pokemon\\Repository\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/Pokemon/Repository',
+        ),
+        'App\\Pokemon\\Entity\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/Pokemon/Entity',
+        ),
+        'App\\Pokemon\\Controller\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/Pokemon/Controller',
+        ),
     );
 
     public static $prefixesPsr0 = array (
+        'T' => 
+        array (
+            'Twig_' => 
+            array (
+                0 => __DIR__ . '/..' . '/twig/twig/lib',
+            ),
+        ),
         'P' => 
         array (
             'Pimple' => 
             array (
                 0 => __DIR__ . '/..' . '/pimple/pimple/src',
+            ),
+        ),
+        'D' => 
+        array (
+            'Doctrine\\DBAL\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/dbal/lib',
+            ),
+            'Doctrine\\Common\\Lexer\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/lexer/lib',
+            ),
+            'Doctrine\\Common\\Collections\\' => 
+            array (
+                0 => __DIR__ . '/..' . '/doctrine/collections/lib',
             ),
         ),
     );

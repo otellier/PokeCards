@@ -220,3 +220,10 @@
 [Thu Sep 22 09:26:20.716775 2016] [:error] [pid 50872] [client 127.0.0.1:53134] PHP   8. App\\Users\\Repository\\UserRepository->getAll() /Users/olivier/work/lp/2016/silex/mysilexmvc/src/Users/Controller/IndexController.php:12
 [Thu Sep 22 09:26:36.116488 2016] [:error] [pid 50970] [client 127.0.0.1:53144] PHP Parse error:  syntax error, unexpected ';', expecting ']' in /Users/olivier/work/lp/2016/silex/mysilexmvc/src/Users/Repository/UserRepository.php on line 94
 [Thu Sep 22 09:26:37.627157 2016] [:error] [pid 50970] [client 127.0.0.1:53144] PHP Parse error:  syntax error, unexpected ';', expecting ']' in /Users/olivier/work/lp/2016/silex/mysilexmvc/src/Users/Repository/UserRepository.php on line 94
+[Wed Oct 18 12:33:43.186103 2017] [authz_core:error] [pid 2514] [client 127.0.0.1:57956] AH01630: client denied by server configuration: /Users/iem/Desktop/Pokecards/webservice
+[Wed Oct 18 12:33:44.465220 2017] [authz_core:error] [pid 2514] [client 127.0.0.1:57956] AH01630: client denied by server configuration: /Users/iem/Desktop/Pokecards/webservice
+[Wed Oct 18 12:34:35.330995 2017] [authz_core:error] [pid 2515] [client 127.0.0.1:57964] AH01630: client denied by server configuration: /Users/iem/Desktop/Pokecards/webservice
+[Wed Oct 18 12:34:36.200713 2017] [authz_core:error] [pid 2515] [client 127.0.0.1:57964] AH01630: client denied by server configuration: /Users/iem/Desktop/Pokecards/webservice
+[Wed Oct 18 13:43:11.117732 2017] [authz_core:error] [pid 2652] [client 127.0.0.1:58161] AH01630: client denied by server configuration: /Users/iem/Desktop/Pokecards/Pokecards_WebService
+[Wed Oct 18 13:43:12.584529 2017] [authz_core:error] [pid 2652] [client 127.0.0.1:58161] AH01630: client denied by server configuration: /Users/iem/Desktop/Pokecards/Pokecards_WebService
+[Wed Oct 18 13:43:13.716002 2017] [authz_core:error] [pid 2652] [client 127.0.0.1:58161] AH01630: client denied by server configuration: /Users/iem/Desktop/Pokecards/Pokecards_WebService
