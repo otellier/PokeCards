@@ -4,7 +4,7 @@ namespace App\Pokemon\Controller;
 
 use Silex\Application;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Resp1onse;
+use Symfony\Component\HttpFoundation\Response;
 class IndexController
 {
     public function listAction(Request $request, Application $app)
