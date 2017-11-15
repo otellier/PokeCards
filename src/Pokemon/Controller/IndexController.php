@@ -86,7 +86,7 @@ class IndexController
                    //POKEMON gen
                    print_r($pokemom_gen_evolution->species->name);
 
-                   // Get the evolutions
+                   // Get the evolution chain
                }
 
                //POKEMON INFO
