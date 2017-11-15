@@ -17,7 +17,7 @@ class IndexController
             'Brise les tendons de ses ennemis avant de crier : Yeee!',
             'http://i0.kym-cdn.com/entries/icons/original/000/016/362/tumblr_nb7jgq9kcR1slfxluo1_1280.jpg',
             '21/20',
-            'Yeee!',
+            array(0 => "fire", 1 => "stone"),
             1.90,
             70,
             array(0 => 6667, 1 => 6668)
@@ -27,7 +27,7 @@ class IndexController
             '¯\_(ツ)_/¯',
             'https://i.ytimg.com/vi/hhiTV5OQlOY/maxresdefault.jpg',
             '21/20',
-            ':D',
+            array(0 => "fire"),
             2.1,
             90,
             array()
@@ -81,10 +81,10 @@ class IndexController
 
                if($res2->getStatusCode() == 200) {
                    $contents2 = $res2->getBody()->getContents();
-                   $pokemom_gen_evolution = json_decode($contents2);
+                   $pokemon_gen_evolution = json_decode($contents2);
 
                    //POKEMON gen
-                   print_r($pokemom_gen_evolution->species->name);
+                   print_r($pokemon_gen_evolution->species->name);
 
                    // Get the evolution chain
                }
@@ -103,7 +103,7 @@ class IndexController
 
 
 
-       return new Response($lists,Response::HTTP_OK, array('content-type' => 'application/json'));
+       return new Response($list_url_pokemon,Response::HTTP_OK, array('content-type' => 'application/json'));
 
 
        // If using JSON...
