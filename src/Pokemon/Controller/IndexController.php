@@ -20,11 +20,21 @@ class IndexController
             'Yeee!',
             1.90,
             70,
-            array(0 => '666', 1 => '667')
+            array(0 => 6667, 1 => 6668)
             );
+        $pok2 = new Pokemon(6667,
+            'david goodenough',
+            '¯\_(ツ)_/¯',
+            'https://i.ytimg.com/vi/hhiTV5OQlOY/maxresdefault.jpg',
+            '21/20',
+            ':D',
+            2.1,
+            90,
+            array()
+        );
 
-       $content = $pok->to_json();
-        //$content += $pok->to_json();
+       $content =json_encode(array(json_decode($pok->to_json(), true),json_decode($pok2->to_json(), true)));
+
 
 
        return new Response($content,Response::HTTP_OK, array('content-type' => 'application/json'));
@@ -32,17 +42,66 @@ class IndexController
 
     public function loadAction(Request $request, Application $app)
     {
+        $list_url_pokemon = array();
+        $list_pokemon = array();
+
         $client = new Client();
-        $res = $client->request('GET', 'https://pokeapi.co/api/v2/pokemon/?limit=1');
+
+        // REQUEST GET ALL URL OF THE POKEMONS
+        $res = $client->request('GET',
+            'https://pokeapi.co/api/v2/pokemon/?limit=2');
+
 
        if($res->getStatusCode() == 200){
            $contents = $res->getBody()->getContents();
-           $pok = json_decode($contents);
-           //echo $pok->results;
-           $list = $pok->results;
-           $lists =json_encode($list);
-           //echo $contents;
+           $temp = json_decode($contents);
+
+           $json = $temp->results;
+
+           foreach ($json as $p){
+               array_push($list_url_pokemon, $p->url);
+           }
+           //$lists =json_encode($list);
        }
+
+
+       // foreach url in the array we make a get request
+       foreach ($list_url_pokemon as $url){
+           $res = $client->request('GET',
+               $url);
+
+           if($res->getStatusCode() == 200) {
+               $contents = $res->getBody()->getContents();
+
+               $pokemon = json_decode($contents);
+
+               // Get the gen + evolution
+               $res2 = $client->request('GET',
+                   $pokemon->species->url);
+
+               if($res2->getStatusCode() == 200) {
+                   $contents2 = $res2->getBody()->getContents();
+                   $pokemom_gen_evolution = json_decode($contents2);
+
+                   //POKEMON gen
+                   print_r($pokemom_gen_evolution->species->name);
+
+                   // Get the evolutions
+               }
+
+               //POKEMON INFO
+               print_r($pokemon->id);
+               print_r($pokemon->name);
+               print_r($pokemon->sprites->front_default);
+               print_r($pokemon->height);
+               print_r($pokemon->weight);
+               echo "<br><br>";
+
+           }
+       }
+
+
+
 
        return new Response($lists,Response::HTTP_OK, array('content-type' => 'application/json'));
 

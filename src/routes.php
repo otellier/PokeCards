@@ -7,3 +7,4 @@ $app->post('/users/delete/{id}', 'App\Users\Controller\IndexController::deleteAc
 $app->post('/users/save', 'App\Users\Controller\IndexController::saveAction')->bind('users.save');
 
 $app->get('/pokemon/list', 'App\Pokemon\Controller\IndexController::listAction')->bind('pokemon.list');
+$app->get('/pokemon/load', 'App\Pokemon\Controller\IndexController::loadAction')->bind('pokemon.load');

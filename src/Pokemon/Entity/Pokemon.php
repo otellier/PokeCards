@@ -6,7 +6,6 @@ class Pokemon
 {
     protected $id;
     protected $name;
-    protected $description;
     protected $image;
     protected $gen;
     protected $type;
