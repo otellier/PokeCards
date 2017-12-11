@@ -36,7 +36,6 @@ class IndexController
        }
 */
 
-
         ////////////
         /// REQUEST GET ALL URL OF THE POKEMONS
         ///
@@ -53,11 +52,87 @@ class IndexController
             foreach ($json as $p){
                 array_push($list_url_pokemon, $p->url);
             }
-            //$lists =json_encode($list);
         }
 
         /// foreach url in the array we make a get request
         foreach ($list_url_pokemon as $url) {
+
+
+            // Variables Pokemon
+
+            $id = null;
+            $name= null;
+            $image= null;
+            $gen = null;
+            $type = array();
+            $height = null;
+            $weight = null;
+            $evolution =array();
+
+            ////////////
+            /// REQUEST GET ALL THE BASICS INFO OF POKEMONS
+            ///
+            $res = $client->request('GET', $url);
+
+            if ($res->getStatusCode() == 200) {
+                $contents = $res->getBody()->getContents();
+                $pokemon = json_decode($contents);
+
+                // Type
+                $id= $pokemon->id;
+                $name = $pokemon->name;
+                $image = $pokemon->sprites->front_default;
+                $height = $pokemon->height;
+                $weight = $pokemon->weight;
+
+            }
+
+
+
+
+            $temp = new Pokemon(
+                $id,
+                $name,
+                $image,
+                $gen,
+                $type,
+                $height,
+                $weight,
+                $evolution
+            );
+
+            array_push($list_pokemon, json_decode($temp->to_json(),true ));
+        }
+        $return = json_encode($list_pokemon);
+
+        return new Response($return,Response::HTTP_OK, array('content-type' => 'application/json'));
+    }
+/*
+
+    public function getAction(Request $request, Application $app)
+    {
+        $parameters = $request->request->all();
+
+
+        $list_url_pokemon = array();
+        $list_pokemon = array();
+
+        $client = new Client();
+
+
+
+
+        ////////////
+        /// REQUEST GET ALL URL OF THE POKEMONS
+        ///
+        $res = $client->request('GET',
+            'https://pokeapi.co/api/v2/pokemon/'.$parameters['id']);
+
+
+        if($res->getStatusCode() == 200){
+
+        }else {
+        }
 
             // Variable URLS
             $url_species = null;
@@ -161,14 +236,12 @@ class IndexController
             );
 
             array_push($list_pokemon, json_decode($temp->to_json(),true ));
-        }
+
         $return = json_encode($list_pokemon);
 
         return new Response($return,Response::HTTP_OK, array('content-type' => 'application/json'));
     }
 
-
-
-
+*/
 
 }
