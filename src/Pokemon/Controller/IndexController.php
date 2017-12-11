@@ -10,104 +10,165 @@ use GuzzleHttp\Client;
 
 class IndexController
 {
+
     public function listAction(Request $request, Application $app)
     {
-        $pok = new Pokemon(6666,
-            'briseur de tendon',
-            'Brise les tendons de ses ennemis avant de crier : Yeee!',
-            'http://i0.kym-cdn.com/entries/icons/original/000/016/362/tumblr_nb7jgq9kcR1slfxluo1_1280.jpg',
-            '21/20',
-            array(0 => "fire", 1 => "stone"),
-            1.90,
-            70,
-            array(0 => 6667, 1 => 6668)
-            );
-        $pok2 = new Pokemon(6667,
-            'david goodenough',
-            '¯\_(ツ)_/¯',
-            'https://i.ytimg.com/vi/hhiTV5OQlOY/maxresdefault.jpg',
-            '21/20',
-            array(0 => "fire"),
-            2.1,
-            90,
-            array()
-        );
-
-       $content =json_encode(array(json_decode($pok->to_json(), true),json_decode($pok2->to_json(), true)));
-
-
-
-       return new Response($content,Response::HTTP_OK, array('content-type' => 'application/json'));
-    }
-
-    public function loadAction(Request $request, Application $app)
-    {
+        $count = 5;
         $list_url_pokemon = array();
         $list_pokemon = array();
 
         $client = new Client();
 
-        // REQUEST GET ALL URL OF THE POKEMONS
+/*
+        ////////////
+        /// REQUEST GET COUNT POKEMONS
+        ///
         $res = $client->request('GET',
-            'https://pokeapi.co/api/v2/pokemon/?limit=2');
+            'https://pokeapi.co/api/v2/pokemon');
 
 
-       if($res->getStatusCode() == 200){
-           $contents = $res->getBody()->getContents();
-           $temp = json_decode($contents);
+        if($res->getStatusCode() == 200){
+            $contents = $res->getBody()->getContents();
+            $temp = json_decode($contents);
 
-           $json = $temp->results;
+            $count = $temp->count;
 
-           foreach ($json as $p){
-               array_push($list_url_pokemon, $p->url);
-           }
-           //$lists =json_encode($list);
        }
+*/
 
 
-       // foreach url in the array we make a get request
-       foreach ($list_url_pokemon as $url){
-           $res = $client->request('GET',
-               $url);
-
-           if($res->getStatusCode() == 200) {
-               $contents = $res->getBody()->getContents();
-
-               $pokemon = json_decode($contents);
-
-               // Get the gen + evolution
-               $res2 = $client->request('GET',
-                   $pokemon->species->url);
-
-               if($res2->getStatusCode() == 200) {
-                   $contents2 = $res2->getBody()->getContents();
-                   $pokemon_gen_evolution = json_decode($contents2);
-
-                   //POKEMON gen
-                   print_r($pokemon_gen_evolution->species->name);
-
-                   // Get the evolution chain
-               }
-
-               //POKEMON INFO
-               print_r($pokemon->id);
-               print_r($pokemon->name);
-               print_r($pokemon->sprites->front_default);
-               print_r($pokemon->height);
-               print_r($pokemon->weight);
-               echo "<br><br>";
-
-           }
-       }
+        ////////////
+        /// REQUEST GET ALL URL OF THE POKEMONS
+        ///
+        $res = $client->request('GET',
+            'https://pokeapi.co/api/v2/pokemon/?limit='.$count);
 
 
+        if($res->getStatusCode() == 200){
+            $contents = $res->getBody()->getContents();
+            $temp = json_decode($contents);
+
+            $json = $temp->results;
+
+            foreach ($json as $p){
+                array_push($list_url_pokemon, $p->url);
+            }
+            //$lists =json_encode($list);
+        }
+
+        /// foreach url in the array we make a get request
+        foreach ($list_url_pokemon as $url) {
+
+            // Variable URLS
+            $url_species = null;
+            $url_evolution = null;
+            $list_url_evolution = array();
+
+            // Variables Pokemon
+
+            $id = null;
+            $name= null;
+            $image= null;
+            $gen = null;
+            $type = array();
+            $height = null;
+            $weight = null;
+            $evolution =array();
+
+            ////////////
+            /// REQUEST GET ALL THE BASICS INFO OF POKEMONS
+            ///
+            $res = $client->request('GET', $url);
+
+            if ($res->getStatusCode() == 200) {
+                $contents = $res->getBody()->getContents();
+                $pokemon = json_decode($contents);
+
+                // Type
+                $id= $pokemon->id;
+                $name = $pokemon->name;
+                $image = $pokemon->sprites->front_default;
+                $height = $pokemon->height;
+                $weight = $pokemon->weight;
+
+                $url_species =  $pokemon->species->url;
+            }
 
 
-       return new Response($list_url_pokemon,Response::HTTP_OK, array('content-type' => 'application/json'));
+            ////////////
+            /// REQUEST GET GENERATION OF POKEMONS
+            ///
+            if($url_species != null) {
+                $res = $client->request('GET', $url_species);
+
+                if ($res->getStatusCode() == 200) {
+                    $contents = $res->getBody()->getContents();
+                    $pokemon = json_decode($contents);
+
+                    //POKEMON generation + url evolution
+                    $gen = $pokemon->generation->name;
+                    $url_evolution = $pokemon->evolution_chain->url;
+                }
+            }
 
 
-       // If using JSON...
-        //$content = $response;
-        //return new Response($content,Response::HTTP_OK, array('content-type' => 'application/json'));
+            ////////////
+            /// REQUEST GET URLS OF EVOLUTIONS OF POKEMONS
+            ///
+            if($url_evolution != null) {
+                $res = $client->request('GET', $url_evolution);
+
+                if ($res->getStatusCode() == 200) {
+                    $contents = $res->getBody()->getContents();
+                    $pokemon = json_decode($contents);
+
+                    foreach ($pokemon->chain->evolves_to as $_evol) {
+                        array_push($list_url_evolution, $_evol->species->url);
+                        foreach ($_evol->evolves_to as $_evol2) {
+                            array_push($list_url_evolution, $_evol2->species->url);
+                        }
+                    }
+                }
+            }
+
+
+            ////////////
+            /// REQUEST GET EVOLUTIONS OF POKEMONS
+            ///
+            foreach ($list_url_evolution as $evol){
+                $res = $client->request('GET', $evol);
+
+                if ($res->getStatusCode() == 200) {
+                    $contents = $res->getBody()->getContents();
+                    $pokemon = json_decode($contents);
+                    if($pokemon->id > $id)
+                        array_push($evolution, $pokemon->id);
+
+
+                }
+            }
+
+
+            $temp = new Pokemon(
+                $id,
+                $name,
+                $image,
+                $gen,
+                $type,
+                $height,
+                $weight,
+                $evolution
+            );
+
+            array_push($list_pokemon, json_decode($temp->to_json(),true ));
+        }
+        $return = json_encode($list_pokemon);
+
+        return new Response($return,Response::HTTP_OK, array('content-type' => 'application/json'));
     }
+
+
+
+
+
 }

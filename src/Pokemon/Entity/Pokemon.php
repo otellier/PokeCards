@@ -13,11 +13,10 @@ class Pokemon
     protected $weight;
     protected $evolution;
 
-    public function __construct($id, $name, $description, $image, $gen, $type, $height, $weight, $evolution)
+    public function __construct($id, $name, $image, $gen, $type, $height, $weight, $evolution)
     {
         $this->id = $id;
         $this->name = $name;
-        $this->description =  $description;
         $this->image =  $image;
         $this->gen =  $gen;
         $this->type =  $type;
@@ -30,7 +29,6 @@ class Pokemon
         return json_encode(array(
             'id' => $this->id,
             'name' => $this->name,
-            'description' => $this->description,
             'image' => $this->image,
             'gen' => $this->gen ,
             'type' => $this->type,
