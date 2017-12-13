@@ -19,13 +19,14 @@ class User
      * @param $token_facebook
      * @param $coins
      */
-    public function __construct($id, $username, $token_facebook, $coins)
+    public function __construct($id, $username, $coins, $token_facebook)
     {
         $this->id = $id;
         $this->username = $username;
-        $this->token_facebook = $token_facebook;
         $this->coins = $coins;
+        $this->token_facebook = $token_facebook;
     }
+
 
     /**
      * @return mixed
@@ -95,8 +96,7 @@ class User
     {
         $array = array();
         $array['id'] = $this->id;
-        $array['name'] = $this->lastname;
-        $array['firstname'] = $this->username;
+        $array['username'] = $this->username;
         $array['coins'] = $this->coins;
         $array['token_facebook'] = $this->token_facebook;
         return $array;
@@ -105,8 +105,7 @@ class User
     public function  to_json(){
         return json_encode(array(
             'id' => $this->id,
-            'name' => $this->lastname,
-            'firstname' => $this->username,
+            'username' => $this->username,
             'coins' => $this->coins ,
             'token_facebook' => $this->token_facebook
         ));

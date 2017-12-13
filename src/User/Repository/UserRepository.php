@@ -40,12 +40,31 @@ class UserRepository
         $statement = $queryBuilder->execute();
         $userData = $statement->fetchAll();
         if($statement->rowCount() != 0) {
-            return new User(['id'], $userData[0]['username'], $userData[0]['coins'], $userData[0]['token_facebook']);
+            return new User($userData[0]['id'], $userData[0]['username'], $userData[0]['coins'], $userData[0]['token_facebook']);
         }else{
             return null;
         }
     }
 
+    public function insert($parameters)
+    {
+        $queryBuilder = $this->db->createQueryBuilder();
+        $queryBuilder
+            ->insert('user')
+            ->values(
+                array(
+                    'username'          => ':username',
+                    'coins'             => ':coins',
+                    'token_facebook'    => ':token_facebook'
+                )
+            )
+            ->setParameter(':username', $parameters['username'])
+            ->setParameter(':coins', 50)
+            ->setParameter(':token_facebook', $parameters['token_facebook']);
+        $statement = $queryBuilder->execute();
+
+        return $this->getUserByTokenFacebook($parameters['token_facebook']);;
+    }
 
 
 }

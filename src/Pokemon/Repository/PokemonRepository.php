@@ -32,16 +32,16 @@ class pokemonRepository
     {
         $queryBuilder = $this->db->createQueryBuilder();
         $queryBuilder
-            ->select('c.id')
+            ->select('c.id_pokemon')
             ->from('user_cards', 'c')
-            ->orderBy('c.id','ASC');
+            ->orderBy('c.id_pokemon','ASC');
 
         $statement = $queryBuilder->execute();
         $pokemonListIdData= $statement->fetchAll();
 
         $pokemonListId =array();
         foreach ($pokemonListIdData as $pokemonId){
-            array_push($pokemonListId,$pokemonId['id']);
+            array_push($pokemonListId,$pokemonId['id_pokemon']);
         }
 
         return $pokemonListId;

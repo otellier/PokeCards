@@ -122,6 +122,7 @@ class IndexController
             return new Response(null, Response::HTTP_NO_CONTENT, array('content-type' => 'application/json'));
         }
     }
+    
 /*
 
     public function getAction(Request $request, Application $app)
