@@ -1,10 +1,13 @@
 <?php
 
-$app->get('/users/list', 'App\Users\Controller\IndexController::listAction')->bind('users.list');
-$app->get('/users/edit/{id}', 'App\Users\Controller\IndexController::editAction')->bind('users.edit');
-$app->get('/users/new', 'App\Users\Controller\IndexController::newAction')->bind('users.new');
-$app->post('/users/delete/{id}', 'App\Users\Controller\IndexController::deleteAction')->bind('users.delete');
-$app->post('/users/save', 'App\Users\Controller\IndexController::saveAction')->bind('users.save');
+$app->get('/user/list', 'App\User\Controller\IndexController::listAction')->bind('users.list');
+$app->get('/user/edit/{id}', 'App\User\Controller\IndexController::editAction')->bind('users.edit');
+
+
+$app->post('/user/new', 'App\User\Controller\IndexController::newAction')->bind('users.new');
+$app->post('/user/delete/{id}', 'App\User\Controller\IndexController::deleteAction')->bind('users.delete');
+$app->post('/user/save', 'App\User\Controller\IndexController::saveAction')->bind('users.save');
 
 $app->get('/pokemon/list', 'App\Pokemon\Controller\IndexController::listAction')->bind('pokemon.list');
+$app->get('/pokemon/list/{token}', 'App\Pokemon\Controller\IndexController::listofuserAction')->bind('pokemon.listofuser');
 $app->get('/pokemon/load', 'App\Pokemon\Controller\IndexController::loadAction')->bind('pokemon.load');

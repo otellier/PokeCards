@@ -21,109 +21,30 @@ class pokemonRepository
     }
 
     /**
-     * Returns a collection of pokemons.
+     * Returns a collection of id of pokemons.
      *
-     * @param int $limit
-     *   The number of users to return.
-     * @param int $offset
-     *   The number of users to skip.
      * @param array $orderBy
      *   Optionally, the order by info, in the $column => $direction format.
      *
      * @return array A collection of pokemons, keyed by pokemon id.
      */
-    public function getAll()
+    public function getAllUserCards()
     {
         $queryBuilder = $this->db->createQueryBuilder();
         $queryBuilder
-            ->select('p.*')
-            ->from('pokemon', 'p');
+            ->select('c.id')
+            ->from('user_cards', 'c')
+            ->orderBy('c.id','ASC');
 
         $statement = $queryBuilder->execute();
-        $pokemonsData = $statement->fetchAll();
-        $pokemonEntityList = null;
-        foreach ($pokemonsData as $pokemonData) {
-            $pokemonEntityList[$pokemonData['id']] = new pokemon(
-                $pokemonData['id'],
-                $pokemonData['name'],
-                $pokemonData['image'],
-                $pokemonData['gen'],
-                $pokemonData['type'],
-                $pokemonData['height'],
-                $pokemonData['weight'],
-                $pokemonData['evolution']
-            );
+        $pokemonListIdData= $statement->fetchAll();
+
+        $pokemonListId =array();
+        foreach ($pokemonListIdData as $pokemonId){
+            array_push($pokemonListId,$pokemonId['id']);
         }
 
-        return $pokemonEntityList;
-    }
-
-    /**
-     * Returns an pokemon object.
-     *
-     * @param $id
-     *   The id of the pokemon to return.
-     *
-     * @return array A collection of pokemons, keyed by pokemon id.
-     */
-    public function getById($id)
-    {
-        $queryBuilder = $this->db->createQueryBuilder();
-        $queryBuilder
-            ->select('p.*')
-            ->from('pokemon', 'p')
-            ->where('id = ?')
-            ->setParameter(0, $id);
-        $statement = $queryBuilder->execute();
-        $pokemonData = $statement->fetchAll();
-
-        return new pokemon(
-            $pokemonData[0]['id'],
-            $pokemonData[0]['name'],
-            $pokemonData[0]['image'],
-            $pokemonData[0]['gen'],
-            $pokemonData[0]['type'],
-            $pokemonData[0]['height'],
-            $pokemonData[0]['weight'],
-            $pokemonData[0]['evolution']
-        );
-    }
-
-    public function delete($id)
-    {
-        $queryBuilder = $this->db->createQueryBuilder();
-        $queryBuilder
-            ->delete('pokemon')
-            ->where('id = :id')
-            ->setParameter(':id', $id);
-
-        $statement = $queryBuilder->execute();
-    }
-
-    public  function deleteAll(){
-        // DROP TABLE pokemon
-        $queryBuilder = $this->db->createQueryBuilder();
-        $queryBuilder
-            ->delete('pokemon');
-        $statement = $queryBuilder->execute();
-
-        // DROP TABLE pokemon_evolution
-        $queryBuilder = $this->db->createQueryBuilder();
-        $queryBuilder
-            ->delete('pokemon_evolution');
-        $statement = $queryBuilder->execute();
-
-        // DROP TABLE pokemon_type
-        $queryBuilder = $this->db->createQueryBuilder();
-        $queryBuilder
-            ->delete('pokemon_type');
-        $statement = $queryBuilder->execute();
-
-        // DROP TABLE type
-        $queryBuilder = $this->db->createQueryBuilder();
-        $queryBuilder
-            ->delete('type');
-        $statement = $queryBuilder->execute();
+        return $pokemonListId;
     }
 
     public function insert($parameters)
@@ -198,52 +119,5 @@ class pokemonRepository
         }
     }
 
-    public function insertType($parameters)
-    {
 
-        $this->deleteAll();
-
-        // TABLE pokemon
-        $queryBuilder = $this->db->createQueryBuilder();
-        $count = 0;
-        foreach ($parameters as $_type) {
-            $queryBuilder
-                ->insert('type')
-                ->values(
-                    array(
-                        'id' => ':id',
-                        'name' => ':name'
-                    )
-                )
-                ->setParameter(':id', $count)
-                ->setParameter(':name', $_type);
-            $statement = $queryBuilder->execute();
-        }
-    }
-
-//TODO UPDATE
-/*
-    public function update($parameters)
-    {
-        $queryBuilder = $this->db->createQueryBuilder();
-        $queryBuilder
-            ->update('pokemon')
-            ->where('id = :id')
-            ->setParameter(':id', $parameters['id']);
-
-        if ($parameters['nom']) {
-            $queryBuilder
-                ->set('nom', ':nom')
-                ->setParameter(':nom', $parameters['nom']);
-        }
-
-        if ($parameters['prenom']) {
-            $queryBuilder
-                ->set('prenom', ':prenom')
-                ->setParameter(':prenom', $parameters['prenom']);
-        }
-
-        $statement = $queryBuilder->execute();
-    }
-*/
 }

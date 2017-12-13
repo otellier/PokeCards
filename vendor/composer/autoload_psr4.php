@@ -7,6 +7,7 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'Twig\\' => array($vendorDir . '/twig/twig/src'),
+    'Symfony\\Polyfill\\Php70\\' => array($vendorDir . '/symfony/polyfill-php70'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Component\\Routing\\' => array($vendorDir . '/symfony/routing'),
     'Symfony\\Component\\HttpKernel\\' => array($vendorDir . '/symfony/http-kernel'),
@@ -25,6 +26,9 @@ return array(
     'Doctrine\\Common\\Cache\\' => array($vendorDir . '/doctrine/cache/lib/Doctrine/Common/Cache'),
     'Doctrine\\Common\\Annotations\\' => array($vendorDir . '/doctrine/annotations/lib/Doctrine/Common/Annotations'),
     'Doctrine\\Common\\' => array($vendorDir . '/doctrine/common/lib/Doctrine/Common'),
+    'App\\User\\Repository\\' => array($baseDir . '/src/User/Repository'),
+    'App\\User\\Entity\\' => array($baseDir . '/src/User/Entity'),
+    'App\\User\\Controller\\' => array($baseDir . '/src/User/Controller'),
     'App\\Pokemon\\Repository\\' => array($baseDir . '/src/Pokemon/Repository'),
     'App\\Pokemon\\Entity\\' => array($baseDir . '/src/Pokemon/Entity'),
     'App\\Pokemon\\Controller\\' => array($baseDir . '/src/Pokemon/Controller'),

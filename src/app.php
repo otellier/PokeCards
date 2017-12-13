@@ -16,3 +16,6 @@ $app->register(new TwigServiceProvider(), array(
 $app['repository.pokemon'] = function ($app) {
     return new App\Pokemon\Repository\PokemonRepository($app['db']);
 };
+$app['repository.user'] = function ($app) {
+    return new App\User\Repository\UserRepository($app['db']);
+};
