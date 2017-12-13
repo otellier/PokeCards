@@ -703,3 +703,5 @@
 127.0.0.1 - - [13/Dec/2017:11:56:50 +0100] "GET /index.php/pokemon/list/6 HTTP/1.1" 404 -
 127.0.0.1 - - [13/Dec/2017:11:57:09 +0100] "GET /index.php/pokemon/list HTTP/1.1" 200 1113
 127.0.0.1 - - [13/Dec/2017:11:57:13 +0100] "GET /index.php/pokemon/list HTTP/1.1" 200 1113
+127.0.0.1 - - [13/Dec/2017:12:01:40 +0100] "GET /index.php/pokemon/list/123 HTTP/1.1" 204 -
+127.0.0.1 - - [13/Dec/2017:12:01:45 +0100] "GET /index.php/pokemon/list/692613377614434 HTTP/1.1" 200 592

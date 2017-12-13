@@ -76,7 +76,7 @@ class IndexController
     {
         $parameters = $request->attributes->all();
         $id_user = $app['repository.user']->getUserByTokenFacebook($parameters['token']);
-        print_r($id_user);
+
         if($id_user != null) {
             $list_pokemon_id = $app['repository.pokemon']->getAllUserCards($id_user);
 
