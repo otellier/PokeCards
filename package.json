@@ -1,0 +1,25 @@
+{
+  "name": "pokecards_webservice",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon start.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/otellier/Pokecards_WebService.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/otellier/Pokecards_WebService/issues"
+  },
+  "homepage": "https://github.com/otellier/Pokecards_WebService#readme",
+  "dependencies": {
+    "express": "^4.16.2",
+    "mysql": "^2.15.0",
+    "request": "^2.83.0"
+  }
+}
