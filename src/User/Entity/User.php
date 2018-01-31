@@ -14,14 +14,14 @@ class User
 
     /**
      * User constructor.
-     * @param $id
+     *
      * @param $username
      * @param $token_facebook
      * @param $coins
      */
-    public function __construct($id, $username, $coins, $token_facebook)
+    public function __construct($username, $coins, $token_facebook)
     {
-        $this->id = $id;
+
         $this->username = $username;
         $this->coins = $coins;
         $this->token_facebook = $token_facebook;
@@ -104,7 +104,6 @@ class User
 
     public function  to_json(){
         return json_encode(array(
-            'id' => $this->id,
             'username' => $this->username,
             'coins' => $this->coins ,
             'token_facebook' => $this->token_facebook

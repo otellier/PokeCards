@@ -40,7 +40,7 @@ class UserRepository
         $statement = $queryBuilder->execute();
         $userData = $statement->fetchAll();
         if($statement->rowCount() != 0) {
-            return new User($userData[0]['id'], $userData[0]['username'], $userData[0]['coins'], $userData[0]['token_facebook']);
+            return new User($userData[0]['username'], $userData[0]['coins'], $userData[0]['token_facebook']);
         }else{
             return null;
         }

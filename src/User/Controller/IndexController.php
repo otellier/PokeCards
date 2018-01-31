@@ -12,12 +12,11 @@ class IndexController
     public function newAction(Request $request, Application $app)
     {
         $parameters = $request->request->all();
-
         if ($app['repository.user']->getUserByTokenFacebook($parameters['token_facebook']) == null) {
             $content = json_encode(json_decode($app['repository.user']->insert($parameters)->to_json(), true));
             return new Response( $content, Response::HTTP_OK, array('content-type' => 'application/json'));
         }else{
-            return new Response(null, Response::HTTP_CONFLICT, array('content-type' => 'application/json'));
+            return new Response($parameters, Response::HTTP_CONFLICT, array('content-type' => 'application/json'));
         }
     }
 
