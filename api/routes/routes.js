@@ -6,6 +6,11 @@ module.exports = function (app) {
 
 
     app.route('/pokemon/list').get(pokemonController.getAll);
+    app.route('/pokemon/list/:token').get(pokemonController.getCardsOfUser);
 
-    app.route('/pokemon/list/:token').get(pokemonController.getUser);
+
+    app.route('/user/new').get(userController.newUser);
+    app.route('/user/{token}').get(userController.connectUser);
+
+
 }
