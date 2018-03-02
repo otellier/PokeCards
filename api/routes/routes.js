@@ -9,8 +9,8 @@ module.exports = function (app) {
     app.route('/pokemon/list/:token').get(pokemonController.getCardsOfUser);
 
 
-    app.route('/user/new').get(userController.newUser);
-    app.route('/user/{token}').get(userController.connectUser);
+    app.route('/user').post(userController.newUser);
+    app.route('/user/:token').get(userController.connectUser);
 
 
 }
