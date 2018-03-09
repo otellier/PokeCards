@@ -11,7 +11,7 @@ var connection_mysql = mysql.createConnection({
 
 exports.newUser = function(req, res) {
 
-console.log(req.body.token);
+console.log(req);
 
     // if(req.body == null){
     //     res.json({
