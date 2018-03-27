@@ -65,11 +65,11 @@ exports.getCardsOfUser = function(req, res) {
         var list_pokemon = new Array();
         for(var i=0; i<list_user_pokemon.length; i++) {
 
-            list_pokemon.push(list_user_pokemon[i].id_pokemon);
+            list_pokemon.push({"id": list_user_pokemon[i].id_pokemon,"iteration": list_user_pokemon[i].iteration});
 
         }
 
-        console.log(list_pokemon);
+        console.log(util.inspect(list_pokemon, false, null));
 
         // REQUEST POKEMONS
 
@@ -85,12 +85,24 @@ exports.getCardsOfUser = function(req, res) {
             var data_pokemon = JSON.parse(data);
             for(var i=0; i<721; i++){
                 var id = i + 1;
-                if(list_pokemon.indexOf(id) != -1) {
+
+                var found = false;
+                var index = null;
+                for(var j = 0; j < list_pokemon.length; j++) {
+                    if (list_pokemon[j].id != -1) {
+                        found = true;
+                        index = j;
+                        break;
+                    }
+                }
+                if(found) {
                     var pokemon_temp = {
                         "id": id,
                         "name": data_pokemon.pokemon_entries[i].pokemon_species.name,
-                        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png"
+                        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
+                        "iteration": list_pokemon[index].iteration
                     };
+                    console.log(util.inspect(pokemon_temp, false, null));
                     response.push(pokemon_temp);
                 }
             }
