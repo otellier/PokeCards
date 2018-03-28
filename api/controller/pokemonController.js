@@ -354,10 +354,7 @@ exports.postExchange = function(req, res) {
 
     connection_mysql.query("INSERT INTO exchange (id_user, id_pokemon1, id_pokemon2) VALUES (" + tokenFacebook_user + "," + pokemon1 + "," + pokemon2 + ")", function (err, result, fields) {
         if (err) throw err;
-        res.json({
-            success: true,
-            message: "Exchange has been created"
-        });
+        res.json("Exchange has been created");
     });
 }
 
