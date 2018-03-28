@@ -42,6 +42,7 @@ exports.getAll = function(req, res) {
     request.end();
 }
 
+
 exports.getCardsOfUser = function(req, res) {
 
     // console.log("params.token = "+ req.params.token);
@@ -50,7 +51,7 @@ exports.getCardsOfUser = function(req, res) {
     var id_user = null;
 
     // GET ID USER
-console.log(req.params.token);
+    console.log(req.params.token);
     connection_mysql.query("SELECT id FROM user WHERE token_facebook = " + req.params.token, function (err, result, fields) {
         if (err) throw err;
         id_user = result;
@@ -81,7 +82,7 @@ console.log(req.params.token);
                 var request = https.get(options, (result) => {
                     result.on('data', (d) => {
                     data += d;
-                    });
+            });
                 result.on('end', function () {
                     var data_pokemon = JSON.parse(data);
                     for (var i = 0; i < 721; i++) {
