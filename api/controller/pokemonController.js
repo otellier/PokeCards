@@ -264,17 +264,147 @@ function isEmptyObject(obj) {
 }
 
 
+
+exports.getExchange = function(req, res) {
+    connection_mysql.query("SELECT * FROM exchange", function (err, result, fields) {
+        if (err) throw err;
+        if(result.length > 0){
+            var response = new Array();
+            for (var i = 0; i < result.length; i++) {
+
+                var id= result[i].id;
+                var pokemon1 = result[i].id_pokemon1;
+                var pokemon2 = result[i].id_pokemon2;
+                var pokemon_temp1 = null;
+                var pokemon_temp2 = null;
+                var exchange = null;
+                // REQUEST POKEMONS
+                var data = "";
+                var options = "https://pokeapi.co/api/v2/pokemon/"+pokemon1+"/";
+                var request = https.get(options, (result) => {
+                    result.on('data', (d) => {
+                        data += d;
+                    });
+                    result.on('end', function () {
+                        var data_pokemon = JSON.parse(data);
+                        console.log("id : "+pokemon1);
+                        console.log("name : "+data_pokemon.name);
+                        console.log("image : "+"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon1 + ".png");
+                        pokemon_temp1 = {
+                            "id": pokemon1,
+                            "name": data_pokemon.name,
+                            "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon1 + ".png"
+                        };
+                        console.log(pokemon_temp1);
+
+                        console.log("ID2 : "+pokemon2);
+
+                    });
+                });
+
+                var options2 = "https://pokeapi.co/api/v2/pokemon/"+pokemon2+"/";
+                var data2 = "";
+                var request2 = https.get(options2, (result2) => {
+                    result2.on('data', (d2) => {
+                    data2 += d2;
+                });
+                    result2.on('end', function () {
+                        var data_pokemon2 = JSON.parse(data2);
+
+                        console.log("id2 : "+pokemon2);
+                        console.log("name2 : "+data_pokemon2.name);
+                        console.log("image2 : "+"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon2 + ".png");
+                        pokemon_temp2 = {
+                            "id": pokemon2,
+                            "name": data_pokemon2.name,
+                            "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon2 + ".png"
+                        };
+
+                    });
+                });
+
+                exchange = {
+                    "id": id,
+                    "pokemon_proposed": pokemon_temp1,
+                    "pokemon_wanted": pokemon_temp2
+                };
+                response.push(exchange);
+
+            }
+
+            res.json(response);
+
+        }else {
+            res.json({
+                success: false,
+                message: "There is no exchanges"
+            });
+        }
+    });
+}
+
 exports.postExchange = function(req, res) {
 
     // console.log("params.token = "+ req.params.token);
 
     var tokenFacebook_user = req.body.token;
-    var pokemon1 = req.body.pokemon1;
-    var pokemon2 = req.body.pokemon2;
+    var pokemon1 = req.body.pokemon_proposed;
+    var pokemon2 = req.body.pokemon_wanted;
 
-    connection_mysql.query("INSERT INTO exchange (id_user, id_pokemon, iteration, date_obtention,  id_user) VALUES (" + card.id + "," + iteration + ",'" + current_date + "'," + id_user + ")", function (err, result, fields) {
-        console.log("INSERT END");
+    connection_mysql.query("INSERT INTO exchange (id_user, id_pokemon1, id_pokemon2) VALUES (" + tokenFacebook_user + "," + pokemon1 + "," + pokemon2 + ")", function (err, result, fields) {
         if (err) throw err;
+        res.json({
+            success: true,
+            message: "Exchange has been created"
+        });
     });
 }
 
+exports.postExchangeAccept = function(req, res) {
+
+    // console.log("params.token = "+ req.params.token);
+    var tokenFacebook_user = req.body.token;
+    var id_exchange = req.body.id_exchange;
+
+    connection_mysql.query("SELECT * FROM exchange WHERE id = " + tokenFacebook_user, function (err, result, fields) {
+        if (err) throw err;
+        if(result.length > 0) {
+            var token_user_exchange = result[0].id_user;
+            var pokemon1 = result[0].pokemon1;
+            var pokemon2 = result[0].pokemon2;
+
+
+            connection_mysql.query("SELECT * FROM user_cards WHERE id = " + tokenFacebook_user + "and  id_pokemon = " + pokemon2, function (err, result, fields) {
+                if (err) throw err;
+                if(result.length > 0) {
+                    var iteration = result[0].iteration;
+                    var id_user_cards = result[0].id;
+
+                    if(iteration > 1){
+                        iteration--;
+                        connection_mysql.query("UPDATE user_cards SET WHERE id = " + tokenFacebook_user + "and  id_pokemon = " + pokemon2, function (err, result, fields) {
+                            if (err) throw err;
+                            if (result.length > 0) {
+
+                            }
+                        });
+                    }else{
+
+                    }
+
+                }else {
+                    res.json({
+                        success: false,
+                        message: "You don't have the pokemon for the exchange"
+                    });
+                }
+            });
+        }else{
+            res.json({
+                success: false,
+                message: "There is no exchange with this id"
+            });
+        }
+
+    });
+}
