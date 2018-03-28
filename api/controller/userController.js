@@ -11,7 +11,6 @@ var connection_mysql = mysql.createConnection({
 
 exports.newUser = function(req, res) {
 
-console.log(req);
 
     if(req.body == null){
         res.json({
@@ -20,22 +19,26 @@ console.log(req);
         });
 
     }else {
-
+        console.log(req.body.token);
         connection_mysql.query("SELECT * FROM user WHERE token_facebook = " + req.body.token, function (err, result, fields) {
             if (err) throw err;
             var user = result;
-            if (user.length < 1) {
+            console.log(user.length);
+            if (user.length  > 0) {
                 res.json({
                     success: false,
                     message: "This user is already registered"
                 });
             } else {
                 console.log("NOT IN DB");
-
+                connection_mysql.query("INSERT INTO user (username, coins, token_facebook) VALUES ('" + req.body.username + "', 50," + req.body.token + ")", function (err, result, fields) {
+                    if (err) throw err;
+                    res.json({
+                        success: true,
+                        message: "User has been registered"
+                    });
+                });
             }
-            console.log(user);
-
-            res.json(list_pokemon);
         });
     }
 }
@@ -69,4 +72,8 @@ exports.connectUser = function(req, res) {
 
     // RETURN A USER ELSE NOTHING
 
+}
+
+function isEmptyObject(obj) {
+    return !Object.keys(obj).length;
 }

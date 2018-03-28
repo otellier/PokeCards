@@ -50,70 +50,78 @@ exports.getCardsOfUser = function(req, res) {
     var id_user = null;
 
     // GET ID USER
-
+console.log(req.params.token);
     connection_mysql.query("SELECT id FROM user WHERE token_facebook = " + req.params.token, function (err, result, fields) {
         if (err) throw err;
         id_user = result;
-        id_user = id_user[0].id;
+        console.log(id_user.length);
+        if(id_user.length > 0){
+            id_user = id_user[0].id;
+            console.log(id_user);
+            // GET ALL CARDS
+            connection_mysql.query("SELECT * FROM user_cards WHERE id_user = " + id_user, function (err, result, fields) {
+                if (err) throw err;
+                list_user_pokemon = result;
+                console.log(list_user_pokemon);
+                var list_pokemon = new Array();
+                for (var i = 0; i < list_user_pokemon.length; i++) {
 
-    // GET ALL CARDS
+                    list_pokemon.push({"id": list_user_pokemon[i].id_pokemon, "iteration": list_user_pokemon[i].iteration});
 
-    connection_mysql.query("SELECT * FROM user_cards WHERE id_user = " + id_user, function (err, result, fields) {
-        if (err) throw err;
-        list_user_pokemon = result;
+                }
 
-        var list_pokemon = new Array();
-        for(var i=0; i<list_user_pokemon.length; i++) {
+                //console.log(util.inspect(list_pokemon, false, null));
 
-            list_pokemon.push({"id": list_user_pokemon[i].id_pokemon,"iteration": list_user_pokemon[i].iteration});
+                // REQUEST POKEMONS
 
-        }
+                var options = "https://pokeapi.co/api/v2/pokedex/1/"; //pokedex national
 
-        console.log(util.inspect(list_pokemon, false, null));
+                var data = "";
 
-        // REQUEST POKEMONS
+                var request = https.get(options, (result) => {
+                    result.on('data', (d) => {
+                    data += d;
+                    });
+                result.on('end', function () {
+                    var data_pokemon = JSON.parse(data);
+                    for (var i = 0; i < 721; i++) {
+                        var id = i + 1;
 
-        var options = "https://pokeapi.co/api/v2/pokedex/1/"; //pokedex national
+                        var found = false;
+                        var index = null;
 
-        var data = "";
-
-        var request = https.get(options, (result) => {
-            result.on('data', (d) => {
-            data += d;
-    });
-        result.on('end', function() {
-            var data_pokemon = JSON.parse(data);
-            for(var i=0; i<721; i++){
-                var id = i + 1;
-
-                var found = false;
-                var index = null;
-                for(var j = 0; j < list_pokemon.length; j++) {
-                    if (list_pokemon[j].id != -1) {
-                        found = true;
-                        index = j;
-                        break;
+                        for (var j = 0; j < list_pokemon.length; j++) {
+                            if (list_pokemon[j].id == id) {
+                                found = true;
+                                index = j;
+                                break;
+                            }
+                        }
+                        if (found) {
+                            var pokemon_temp = {
+                                "id": id,
+                                "name": data_pokemon.pokemon_entries[i].pokemon_species.name,
+                                "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
+                                "iteration": list_pokemon[index].iteration
+                            };
+                            // console.log(util.inspect(pokemon_temp, false, null));
+                            response.push(pokemon_temp);
+                        }
                     }
-                }
-                if(found) {
-                    var pokemon_temp = {
-                        "id": id,
-                        "name": data_pokemon.pokemon_entries[i].pokemon_species.name,
-                        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
-                        "iteration": list_pokemon[index].iteration
-                    };
-                    console.log(util.inspect(pokemon_temp, false, null));
-                    response.push(pokemon_temp);
-                }
-            }
-            res.json(response);
-        });
-    });
-        request.on('error', (e) => {
-            console.error(e);
-    });
-        request.end();
-    });
+                    res.json(response);
+                });
+            });
+                request.on('error', (e) => {
+                    console.error(e);
+            });
+                request.end();
+            });
+        }else{
+            res.json({
+                success: false,
+                message: "This token is incorrect"
+            });
+        }
     });
 
 }
