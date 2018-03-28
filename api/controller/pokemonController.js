@@ -186,12 +186,15 @@ exports.getBooster = function(req, res) {
             }
             id_user = _user[0].id;
             coins_user = _user[0].coins;
-            if(coins_user == 0){
+            if(coins_user < 1){
+                console.log("ok");
                 res.json({
                     success: false,
                     message: "Need more coins"
                 });
+
             }else {
+
                 coins_user--;
                 connection_mysql.query("UPDATE user SET coins = " + coins_user + " WHERE token_facebook = " + tokenFacebook_user, function (err, result, fields) {
                     if (err) throw err;
@@ -234,10 +237,9 @@ exports.getBooster = function(req, res) {
                         }
                     });
                 });
+                res.json(listBooster);
             }
         });
-
-        res.json(listBooster);
     });
 
 });
@@ -270,5 +272,9 @@ exports.postExchange = function(req, res) {
     var pokemon1 = req.body.pokemon1;
     var pokemon2 = req.body.pokemon2;
 
+    connection_mysql.query("INSERT INTO exchange (id_user, id_pokemon, iteration, date_obtention,  id_user) VALUES (" + card.id + "," + iteration + ",'" + current_date + "'," + id_user + ")", function (err, result, fields) {
+        console.log("INSERT END");
+        if (err) throw err;
+    });
 }
 
