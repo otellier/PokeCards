@@ -174,53 +174,67 @@ exports.getBooster = function(req, res) {
 
         console.log("// GET ID USER");
         // console.log("tokenFacebook_user = "+tokenFacebook_user);
-        connection_mysql.query("SELECT id FROM user WHERE token_facebook = " + tokenFacebook_user, function (err, result, fields) {
+        connection_mysql.query("SELECT id, coins FROM user WHERE token_facebook = " + tokenFacebook_user, function (err, result, fields) {
             if (err) throw err;
-            id_user = result;
-            if(!id_user){
+            _user = result;
+            if(!_user){
                 console.log("user is null");
                 res.json({
                     success: false,
                     message: "The token is incorrect"
                 });
             }
-            id_user = id_user[0].id;
-            // console.log("user = "+id_user);
-            // ADD ALL CARDS
-            console.log("// ADD ALL CARDS");
-            // for(var i=0; i<listBooster.length; i++) {
-            listBooster.forEach(function(card){
-
-                // console.log("cardid = "+card.id);
-                connection_mysql.query("SELECT iteration FROM user_cards WHERE id_user = " + id_user + " AND id_pokemon = " + card.id, function (err, result, fields) {
-
-
-                    // console.log("iteration = "+util.inspect(result, false, null));
-                    // console.log("iteration test "+isEmptyObject(result));
-                    var iteration = 1;
-
-                    if(!isEmptyObject(result)){
-                        console.log("UPDATE START");
-                        iteration = result[0].iteration;
-                        console.log(iteration);
-                        iteration++;
-                        connection_mysql.query("UPDATE user_cards SET iteration = " + iteration + " WHERE id_user = " + id_user + " AND id_pokemon = " + card.id, function (err, result, fields) {
-                            console.log("UPDATE END");
-                            if (err) throw err;
-                        });
-                    }else {
-                        var current_date = new Date(Date.now()).YYYYMMDDhhmmss();
-                        console.log("INSERT START");
-                        console.log("iteration = "+iteration);
-                        console.log("card.id = "+ card.id);
-                        console.log("current_date = "+ current_date);
-                        connection_mysql.query("INSERT INTO user_cards (id_pokemon, iteration, date_obtention,  id_user) VALUES (" +card.id + "," + iteration + ",'" + current_date + "',"+id_user+")", function (err, result, fields) {
-                            console.log("INSERT END");
-                            if (err) throw err;
-                        });
-                    }
+            id_user = _user[0].id;
+            coins_user = _user[0].coins;
+            if(coins_user == 0){
+                res.json({
+                    success: false,
+                    message: "Need more coins"
                 });
-            });
+            }else {
+                coins_user--;
+                connection_mysql.query("UPDATE user SET coins = " + coins_user + " WHERE token_facebook = " + tokenFacebook_user, function (err, result, fields) {
+                    if (err) throw err;
+                    console.log(coins_user);
+                });
+
+                // console.log("user = "+id_user);
+                // ADD ALL CARDS
+                console.log("// ADD ALL CARDS");
+                // for(var i=0; i<listBooster.length; i++) {
+                listBooster.forEach(function (card) {
+
+                    // console.log("cardid = "+card.id);
+                    connection_mysql.query("SELECT iteration FROM user_cards WHERE id_user = " + id_user + " AND id_pokemon = " + card.id, function (err, result, fields) {
+
+
+                        // console.log("iteration = "+util.inspect(result, false, null));
+                        // console.log("iteration test "+isEmptyObject(result));
+                        var iteration = 1;
+
+                        if (!isEmptyObject(result)) {
+                            console.log("UPDATE START");
+                            iteration = result[0].iteration;
+                            console.log(iteration);
+                            iteration++;
+                            connection_mysql.query("UPDATE user_cards SET iteration = " + iteration + " WHERE id_user = " + id_user + " AND id_pokemon = " + card.id, function (err, result, fields) {
+                                console.log("UPDATE END");
+                                if (err) throw err;
+                            });
+                        } else {
+                            var current_date = new Date(Date.now()).YYYYMMDDhhmmss();
+                            console.log("INSERT START");
+                            console.log("iteration = " + iteration);
+                            console.log("card.id = " + card.id);
+                            console.log("current_date = " + current_date);
+                            connection_mysql.query("INSERT INTO user_cards (id_pokemon, iteration, date_obtention,  id_user) VALUES (" + card.id + "," + iteration + ",'" + current_date + "'," + id_user + ")", function (err, result, fields) {
+                                console.log("INSERT END");
+                                if (err) throw err;
+                            });
+                        }
+                    });
+                });
+            }
         });
 
         res.json(listBooster);
