@@ -13,30 +13,31 @@ exports.newUser = function(req, res) {
 
 console.log(req);
 
-    // if(req.body == null){
-    //     res.json({
-    //         success: false,
-    //         message: "The token is null"
-    //     });
-    //
-    // }else {
-    //
-    //     connection_mysql.query("SELECT * FROM user WHERE token_facebook = " + req.body.token, function (err, result, fields) {
-    //         if (err) throw err;
-    //         var user = result;
-    //         if (user.length < 1) {
-    //             res.json({
-    //                 success: false,
-    //                 message: "This user is already registered"
-    //             });
-    //         } else {
-    //             console.log("NOT IN DB");
-    //         }
-    //         console.log(user);
-    //
-    //         res.json(list_pokemon);
-    //     });
-    // }
+    if(req.body == null){
+        res.json({
+            success: false,
+            message: "The token is null"
+        });
+
+    }else {
+
+        connection_mysql.query("SELECT * FROM user WHERE token_facebook = " + req.body.token, function (err, result, fields) {
+            if (err) throw err;
+            var user = result;
+            if (user.length < 1) {
+                res.json({
+                    success: false,
+                    message: "This user is already registered"
+                });
+            } else {
+                console.log("NOT IN DB");
+
+            }
+            console.log(user);
+
+            res.json(list_pokemon);
+        });
+    }
 }
 
 exports.connectUser = function(req, res) {
@@ -58,7 +59,7 @@ exports.connectUser = function(req, res) {
                 message: "This user is not registered"
             });
         }else{
-            res.json(user);
+            res.json(user[0]);
 
         }
         console.log(user);

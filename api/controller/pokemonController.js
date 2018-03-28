@@ -118,7 +118,6 @@ exports.getCardsOfUser = function(req, res) {
 
 }
 
-
 exports.getBooster = function(req, res) {
 
     // console.log("params.token = "+ req.params.token);
@@ -239,3 +238,15 @@ Date.prototype.YYYYMMDDhhmmss = function() {
 function isEmptyObject(obj) {
     return !Object.keys(obj).length;
 }
+
+
+exports.postExchange = function(req, res) {
+
+    // console.log("params.token = "+ req.params.token);
+
+    var tokenFacebook_user = req.body.token;
+    var pokemon1 = req.body.pokemon1;
+    var pokemon2 = req.body.pokemon2;
+
+}
+
