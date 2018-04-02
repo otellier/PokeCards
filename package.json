@@ -20,6 +20,8 @@
   "dependencies": {
     "express": "^4.16.2",
     "mysql": "^2.15.0",
-    "request": "^2.83.0"
+    "npm": "^5.8.0",
+    "request": "^2.83.0",
+    "sync-request": "^6.0.0"
   }
 }
