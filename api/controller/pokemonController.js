@@ -1,9 +1,18 @@
 var https = require('https');
 var sync_request = require('sync-request');
+var sync_mysql = require('sync-mysql');
 var mysql = require('mysql');
 const util = require('util');
 
 var connection_mysql = mysql.createConnection({
+    host: "127.0.0.1",
+    user: "root",
+    password: "",
+    database: "pokecards",
+    port: "3306"
+});
+
+sync_mysql_connection = new sync_mysql({
     host: "127.0.0.1",
     user: "root",
     password: "",
@@ -273,13 +282,14 @@ exports.getExchange = function(req, res) {
         if(result.length > 0){
             var response = new Array();
             for (var i = 0; i < result.length; i++) {
-
+                var id_user = result[i].id_user;
                 var id= result[i].id;
                 var pokemon1 = result[i].id_pokemon1;
                 var pokemon2 = result[i].id_pokemon2;
                 var pokemon_temp1 = null;
                 var pokemon_temp2 = null;
                 var exchange = null;
+                var username = '';
                 // REQUEST POKEMONS
 
 
@@ -287,37 +297,41 @@ exports.getExchange = function(req, res) {
 
                 var data_pokemon = JSON.parse(result1.body);
 
-                console.log("id : "+pokemon1);
-                console.log("name : "+data_pokemon.name);
-                console.log("image : "+"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon1 + ".png");
+                // console.log("id : "+pokemon1);
+                // console.log("name : "+data_pokemon.name);
+                // console.log("image : "+"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon1 + ".png");
                 pokemon_temp1 = {
                     "id": pokemon1,
                     "name": data_pokemon.name,
                     "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon1 + ".png"
                 };
-                console.log(pokemon_temp1);
+                // console.log(pokemon_temp1);
 
                 var res2 = sync_request('GET',"https://pokeapi.co/api/v2/pokemon/"+pokemon2+"/");
 
 
                 var data_pokemon2 = JSON.parse(res2.body);
 
-                console.log("id2 : "+pokemon2);
-                console.log("name2 : "+data_pokemon2.name);
-                console.log("image2 : "+"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon2 + ".png");
+                // console.log("id2 : "+pokemon2);
+                // console.log("name2 : "+data_pokemon2.name);
+                // console.log("image2 : "+"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon2 + ".png");
                 pokemon_temp2 = {
                     "id": pokemon2,
                     "name": data_pokemon2.name,
                     "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon2 + ".png"
                 };
 
+                var result_username = sync_mysql_connection.query("SELECT * FROM user WHERE id = " + id_user);
+
+                username = result_username[0].username;
+
                 exchange = {
                     "id": id,
+                    "username": username,
                     "pokemon_proposed": pokemon_temp1,
                     "pokemon_wanted": pokemon_temp2
                 };
                 response.push(exchange);
-
 
             }
 
