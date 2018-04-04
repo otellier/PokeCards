@@ -438,9 +438,41 @@ exports.getCardsOfPokemon= function(req, res) {
     var data_pokemon2 = JSON.parse(request2.getBody());
 
     var pokemon_card = data_pokemon.cards[0].imageUrl;
+
+
     res.json({
         "id": id,
         "name": data_pokemon2.name,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
+        "card": pokemon_card
+    });
+
+
+}
+exports.getCardsPokemonOfUser= function(req, res) {
+    var id = req.params.id;
+    var token_user = req.params.token;
+
+    var request1 = sync_request('GET', "https://api.pokemontcg.io/v1/cards?nationalPokedexNumber="+ id );
+    var data_pokemon = JSON.parse(request1.getBody());
+
+    var request2 = sync_request('GET', "https://pokeapi.co/api/v2/pokemon/" + id + "/");
+    var data_pokemon2 = JSON.parse(request2.getBody());
+
+    var pokemon_card = data_pokemon.cards[0].imageUrl;
+
+    var result_id_user = sync_mysql_connection.query("SELECT * FROM user WHERE token_facebook = " + token_user);
+
+    var id_user = result_id_user[0].id;
+    var result_count = sync_mysql_connection.query("SELECT COUNT(*) as c  FROM user_cards WHERE id_user = " + id_user+" AND id_pokemon = "+id);
+
+    var iteration = result_count[0].c;
+
+
+    res.json({
+        "id": id,
+        "name": data_pokemon2.name,
+        "iteration": iteration,
         "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
         "card": pokemon_card
     });
