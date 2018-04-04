@@ -31,8 +31,8 @@ exports.getAll = function(req, res) {
 
     var data = "";
     var response = [];
-    var request = https.get(options, (result) => {
-        result.on('data', (d) => {
+    var request = https.get(options, function(result){
+        result.on('data', function(d){
         data += d;
     });
     result.on('end', function() {
@@ -45,7 +45,7 @@ exports.getAll = function(req, res) {
             res.json(response);
         });
     });
-    request.on('error', (e) => {
+    request.on('error', function(e){
         console.error(e);
     });
 
@@ -89,8 +89,8 @@ exports.getCardsOfUser = function(req, res) {
 
                 var data = "";
 
-                var request = https.get(options, (result) => {
-                    result.on('data', (d) => {
+                var request = https.get(options, function(result){
+                    result.on('data', function(d){
                     data += d;
             });
                 result.on('end', function () {
@@ -122,7 +122,7 @@ exports.getCardsOfUser = function(req, res) {
                     res.json(response);
                 });
             });
-                request.on('error', (e) => {
+                request.on('error', function(e){
                     console.error(e);
             });
                 request.end();
@@ -151,8 +151,8 @@ exports.getBooster = function(req, res) {
 
     var data = "";
 
-    var request = https.get(options, (result) => {
-        result.on('data', (d) => {
+    var request = https.get(options, function(result){
+        result.on('data', function(d){
         data += d;
     });
     result.on('end', function() {
@@ -218,43 +218,21 @@ exports.getBooster = function(req, res) {
                 // for(var i=0; i<listBooster.length; i++) {
                 listBooster.forEach(function (card) {
 
-                    // console.log("cardid = "+card.id);
-                    connection_mysql.query("SELECT iteration FROM user_cards WHERE id_user = " + id_user + " AND id_pokemon = " + card.id, function (err, result, fields) {
-
-
-                        // console.log("iteration = "+util.inspect(result, false, null));
-                        // console.log("iteration test "+isEmptyObject(result));
-                        var iteration = 1;
-
-                        if (!isEmptyObject(result)) {
-                            console.log("UPDATE START");
-                            iteration = result[0].iteration;
-                            console.log(iteration);
-                            iteration++;
-                            connection_mysql.query("UPDATE user_cards SET iteration = " + iteration + " WHERE id_user = " + id_user + " AND id_pokemon = " + card.id, function (err, result, fields) {
-                                console.log("UPDATE END");
-                                if (err) throw err;
-                            });
-                        } else {
-                            var current_date = new Date(Date.now()).YYYYMMDDhhmmss();
-                            console.log("INSERT START");
-                            console.log("iteration = " + iteration);
-                            console.log("card.id = " + card.id);
-                            console.log("current_date = " + current_date);
-                            connection_mysql.query("INSERT INTO user_cards (id_pokemon, iteration, date_obtention,  id_user) VALUES (" + card.id + "," + iteration + ",'" + current_date + "'," + id_user + ")", function (err, result, fields) {
-                                console.log("INSERT END");
-                                if (err) throw err;
-                            });
-                        }
+                    var current_date = new Date(Date.now()).YYYYMMDDhhmmss();
+                    console.log("INSERT START");
+                    console.log("card.id = " + card.id);
+                    console.log("current_date = " + current_date);
+                    connection_mysql.query("INSERT INTO user_cards (id_pokemon,  date_obtention, source_obtention,  id_user) VALUES (" + card.id + ",'" + current_date + "','BOOSTER'," + id_user + ")", function (err, result, fields) {
+                        console.log("INSERT END");
+                        if (err) throw err;
                     });
                 });
                 res.json(listBooster);
             }
         });
     });
-
 });
-    request.on('error', (e) => {
+    request.on('error', function(e){
         console.error(e);
 });
     request.end();
@@ -299,37 +277,38 @@ exports.getExchange = function(req, res) {
                 // REQUEST POKEMONS
                 promises.push(new Promise( function (resolve, reject) {
 
-                    var options = "https://pokeapi.co/api/v2/pokemon/" + pokemon1 + "/";
-                    var data = "";
-                    var request = https.get(options, function (result) {
-                        result.on('data', function (d) {
-                            data += d;
-                        });
-                        result.on('end', function () {
-                            var data_pokemon = JSON.parse(data);
-                            pokemon_name1 = data_pokemon.name;
-                        });
-                    });
+                    // var options = "https://pokeapi.co/api/v2/pokemon/" + pokemon1 + "/";
+                    // var data = "";
+                    // var request = https.get(options, function (result) {
+                    //     result.on('data', function (d) {
+                    //         data += d;
+                    //     });
+                    //     result.on('end', function () {
+                    //         var data_pokemon = JSON.parse(data);
+                    //         pokemon_name1 = data_pokemon.name;
+                    //     });
+                    // });
+                    //
+                    // var options2 = "https://pokeapi.co/api/v2/pokemon/" + pokemon1 + "/";
+                    // var data2 = "";
+                    // var request = https.get(options2, function (result) {
+                    //     result.on('data', function (d) {
+                    //         data2 += d;
+                    //     });
+                    //     result.on('end', function () {
+                    //         var data_pokemon = JSON.parse(data2);
+                    //         pokemon_name2 = data_pokemon.name;
+                    //     });
+                    // });
 
-                    var options2 = "https://pokeapi.co/api/v2/pokemon/" + pokemon1 + "/";
-                    var data2 = "";
-                    var request = https.get(options2, function (result) {
-                        result.on('data', function (d) {
-                            data2 += d;
-                        });
-                        result.on('end', function () {
-                            var data_pokemon = JSON.parse(data2);
-                            pokemon_name2 = data_pokemon.name;
-                        });
-                    });
-                    // console.log("id : "+pokemon1);
-                    // console.log("name : "+data_pokemon.name);
-                    // console.log("image : "+"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon1 + ".png");
+                    var request1 = sync_request('GET', "https://pokeapi.co/api/v2/pokemon/" + pokemon1 + "/");
+                    var data_pokemon1 = JSON.parse(request1.getBody());
+                    pokemon_name1 = data_pokemon1.name;
 
+                    var request2 = sync_request('GET', "https://pokeapi.co/api/v2/pokemon/" + pokemon2 + "/");
+                    var data_pokemon2 = JSON.parse(request2.getBody());
+                    pokemon_name2 = data_pokemon2.name;
 
-                    // console.log("id2 : "+pokemon2);
-                    // console.log("name2 : "+data_pokemon2.name);
-                    // console.log("image2 : "+"https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + pokemon2 + ".png");
 
                     pokemon_temp1 = {
                         "id": pokemon1,
@@ -388,14 +367,9 @@ exports.postExchange = function(req, res) {
 
 exports.postExchangeAccept = function(req, res) {
 
-    // console.log("params.token = "+ req.params.token);
     var tokenFacebook_user = req.body.token;
     var id_exchange = req.body.id_exchange;
     var current_date = new Date(Date.now()).YYYYMMDDhhmmss();
-
-    console.log("id_exchange "+id_exchange);
-
-    // USER WHO PROPOSED EXCHANGE
 
     connection_mysql.query("SELECT * FROM exchange WHERE id = " + id_exchange, function (err, result, fields) {
         if (err) throw err;
@@ -421,9 +395,9 @@ exports.postExchangeAccept = function(req, res) {
                                     console.log("1 : "+id_user_cards1);
                                     console.log("2 : "+id_user_cards2);
 
-                                    connection_mysql.query("UPDATE user_cards SET  id_user = "+id_user_exchange+"  WHERE id = " + id_user_cards2 , function (err, result, fields) {
+                                    connection_mysql.query("UPDATE user_cards SET  id_user = "+id_user_exchange+", date_obtention = "+current_date+", source_obtention = 'EXCHANGE' WHERE id = " + id_user_cards2 , function (err, result, fields) {
                                         if (err) throw err;
-                                        connection_mysql.query("UPDATE user_cards SET  id_user = "+user_accept_exchange+" WHERE id = " + id_user_cards1, function (err, result, fields) {
+                                        connection_mysql.query("UPDATE user_cards SET  id_user = "+user_accept_exchange+", date_obtention = "+current_date+", source_obtention = 'EXCHANGE' WHERE id = " + id_user_cards1, function (err, result, fields) {
                                             if (err) throw err;
                                             connection_mysql.query("DELETE FROM exchange WHERE id = " + id_exchange , function (err, result, fields) {
                                                 if (err) throw err;
@@ -434,7 +408,10 @@ exports.postExchangeAccept = function(req, res) {
                                     });
                                 }
                                 else {
-                                    res.json("The user who proposed this exchange don't have the pokemon now");
+                                    connection_mysql.query("DELETE FROM exchange WHERE id = " + id_exchange , function (err, result, fields) {
+                                        if (err) throw err;
+                                        res.json("The user who proposed this exchange don't have the pokemon now");
+                                    });
                                 }
                             });
                         }else {
