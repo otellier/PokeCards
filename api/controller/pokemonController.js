@@ -439,13 +439,13 @@ exports.getCardsOfPokemon= function(req, res) {
 
     var pokemon_card = data_pokemon.cards[0].imageUrl;
 
-
-    res.json({
-        "id": id,
-        "name": data_pokemon2.name,
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
-        "card": pokemon_card
-    });
+var pokemon = {
+    "id": id,
+    "name": data_pokemon2.name,
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
+    "card": pokemon_card
+};
+    res.json(pokemon);
 
 
 }
@@ -468,14 +468,14 @@ exports.getCardsPokemonOfUser= function(req, res) {
 
     var iteration = result_count[0].c;
 
-
-    res.json({
-        "id": id,
-        "name": data_pokemon2.name,
-        "iteration": iteration,
-        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
-        "card": pokemon_card
-    });
+var pokemon = {
+    "id": id,
+    "name": data_pokemon2.name,
+    "iteration": iteration,
+    "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
+    "card": pokemon_card
+};
+    res.json(pokemon);
 
 
 }
