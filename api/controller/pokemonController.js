@@ -139,7 +139,6 @@ exports.getCardsOfUser = function(req, res) {
 
 exports.getBooster = function(req, res) {
 
-    // console.log("params.token = "+ req.params.token);
     var listPokemon = new Array();
     var listBooster = new Array();
     var response = [];
@@ -426,6 +425,18 @@ exports.postExchangeAccept = function(req, res) {
             res.json("There is no exchange with this id");
         }
     });
+
+
+}
+
+exports.getCardsOfPokemon= function(req, res) {
+    var id = req.params.id;
+
+    var request1 = sync_request('GET', "https://api.pokemontcg.io/v1/cards?nationalPokedexNumber="+ id );
+    var data_pokemon = JSON.parse(request1.getBody());
+
+    var pokemon_card = data_pokemon.cards[0].imageUrl;
+    res.json({"card": pokemon_card});
 
 
 }
