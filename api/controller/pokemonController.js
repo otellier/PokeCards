@@ -400,131 +400,54 @@ exports.postExchangeAccept = function(req, res) {
     connection_mysql.query("SELECT * FROM exchange WHERE id = " + id_exchange, function (err, result, fields) {
         if (err) throw err;
         if(result.length > 0) {
-            console.log(result[0])
             var id_user_exchange = result[0].id_user;
             var pokemon1 = result[0].id_pokemon1;
             var pokemon2 = result[0].id_pokemon2;
-
-            console.log(id_user_exchange);
-            console.log(pokemon1);
-            console.log(pokemon2);
-
-            connection_mysql.query("SELECT * FROM user_cards WHERE id_user = " + id_user_exchange + " AND id_pokemon = " + pokemon1, function (err, result, fields) {
+            var id_user_cards1;
+            var id_user_cards2;
+            connection_mysql.query("SELECT * FROM user WHERE token_facebook = " + tokenFacebook_user , function (err, result, fields) {
                 if (err) throw err;
                 if(result.length > 0) {
-                    var iteration = result[0].iteration;
-
-                    if(iteration > 1){
-                        iteration--;
-                        connection_mysql.query("UPDATE user_cards SET iteration = "+iteration+" WHERE id_user = " + id_user_exchange + " AND id_pokemon = " + pokemon1, function (err, result, fields) {
-                            if (err) throw err;
-                            if (result.length > 0) {
-                            }
-                        });
-                    }else{
-                        connection_mysql.query("DELETE FROM user_cards WHERE id_user = " + id_user_exchange + " AND id_pokemon = " + pokemon1, function (err, result, fields) {
-                            if (err) throw err;
-                            if (result.length > 0) {
-                            }
-                        });
-                    }
-
-                }else {
-                    res.json("You don't have the pokemon for the exchange");
-                }
-            });
-            connection_mysql.query("SELECT * FROM user_cards WHERE id_user = " + id_user_exchange + " AND id_pokemon = " + pokemon2, function (err, result, fields) {
-                if (err) throw err;
-                if(result.length > 0) {
-                    var iteration = result[0].iteration;
-
-                    if(iteration > 1) {
-                        iteration++;
-                        connection_mysql.query("UPDATE user_cards SET iteration = " + iteration + " WHERE id_user = " + id_user_exchange + " AND id_pokemon = " + pokemon2, function (err, result, fields) {
-                            if (err) throw err;
-                            if (result.length > 0) {
-                            }
-                        });
-                    }
-
-                }else {
-                    connection_mysql.query("INSERT INTO user_cards VALUES ("+id_user_exchange+", " + pokemon2 + ", " + 1 + ", '" + current_date + "')" , function (err, result, fields) {
-                        if (err) throw err;
-                        if (result.length > 0) {
-                        }
-                    });
-                }
-            });
-
-            console.log("tokenFacebook_user "+tokenFacebook_user);
-            // USER WHO ACCEPT EXCHANGE
-
-            connection_mysql.query("SELECT * FROM user WHERE token_facebook = " + tokenFacebook_user, function (err, result, fields) {
-                if (err) throw err;
-                if(result.length > 0) {
-                    console.log(result[0]);
-                    var id_user_accept = result[0].id;
-
-                    console.log("id_user_accept "+id_user_accept);
-
-                    connection_mysql.query("SELECT * FROM user_cards WHERE id_user = " + id_user_accept + " AND id_pokemon = " + pokemon2, function (err, result, fields) {
+                    var user_accept_exchange = result[0].id;
+                    connection_mysql.query("SELECT * FROM user_cards WHERE id_user = " + user_accept_exchange + " AND id_pokemon = " + pokemon2, function (err, result, fields) {
                         if (err) throw err;
                         if(result.length > 0) {
-                            var iteration = result[0].iteration;
+                            id_user_cards2 = result[0].id;
+                            connection_mysql.query("SELECT * FROM user_cards WHERE id_user = " + id_user_exchange + " AND id_pokemon = " + pokemon1, function (err, result, fields) {
+                                if (err) throw err;
+                                if (result.length > 0) {
+                                    id_user_cards1 = result[0].id;
 
-                            if(iteration > 1){
-                                iteration--;
-                                connection_mysql.query("UPDATE user_cards SET iteration = "+iteration+" WHERE id_user = " + id_user_exchange + " AND id_pokemon = " + pokemon2, function (err, result, fields) {
-                                    if (err) throw err;
-                                    if (result.length > 0) {
-                                    }
-                                });
-                            }else{
-                                connection_mysql.query("DELETE FROM user_cards WHERE id_user = " + id_user_accept + " AND id_pokemon = " + pokemon2, function (err, result, fields) {
-                                    if (err) throw err;
-                                    if (result.length > 0) {
-                                    }
-                                });
-                            }
+                                    console.log("1 : "+id_user_cards1);
+                                    console.log("2 : "+id_user_cards2);
 
+                                    connection_mysql.query("UPDATE user_cards SET  id_user = "+id_user_exchange+"  WHERE id = " + id_user_cards2 , function (err, result, fields) {
+                                        if (err) throw err;
+                                        connection_mysql.query("UPDATE user_cards SET  id_user = "+user_accept_exchange+" WHERE id = " + id_user_cards1, function (err, result, fields) {
+                                            if (err) throw err;
+                                            connection_mysql.query("DELETE FROM exchange WHERE id = " + id_exchange , function (err, result, fields) {
+                                                if (err) throw err;
+                                                res.json("Exchange has been done");
+                                            });
+
+                                        });
+                                    });
+                                }
+                                else {
+                                    res.json("The user who proposed this exchange don't have the pokemon now");
+                                }
+                            });
                         }else {
                             res.json("You don't have the pokemon for the exchange");
                         }
                     });
-                    connection_mysql.query("SELECT * FROM user_cards WHERE id_user = " + id_user_accept + " AND id_pokemon = " + pokemon1, function (err, result, fields) {
-                        if (err) throw err;
-                        if(result.length > 0) {
-                            var iteration = result[0].iteration;
-
-                            if(iteration > 1) {
-                                iteration++;
-                                connection_mysql.query("UPDATE user_cards SET iteration = " + iteration + " WHERE id_user = " + id_user_accept + " AND id_pokemon = " + pokemon1, function (err, result, fields) {
-                                    if (err) throw err;
-                                });
-                            }
-
-                        }else {
-                            connection_mysql.query("INSERT INTO user_cards VALUES ("+id_user_accept+", " + pokemon1 + ", " + 1 + ", '" + current_date + "')" , function (err, result, fields) {
-                                if (err) throw err;
-                            });
-                        }
-
-                        connection_mysql.query("DELETE FROM exchange WHERE id = " + id_exchange , function (err, result, fields) {
-                            if (err) throw err;
-                        });
-                        res.json("Exchange has been done");
-                    });
-
-                }else{
-                    res.json("User token invalid");
-                }
-
-            });
+                }else {
+                res.json("Token is invalid");
+            }
+        });
         }else{
             res.json("There is no exchange with this id");
         }
-
-
     });
 
 
