@@ -182,7 +182,6 @@ exports.getBooster = function(req, res) {
 
         // GET ID USER
 
-        console.log("// GET ID USER");
         // console.log("tokenFacebook_user = "+tokenFacebook_user);
         connection_mysql.query("SELECT id, coins FROM user WHERE token_facebook = " + tokenFacebook_user, function (err, result, fields) {
             if (err) throw err;
@@ -435,8 +434,16 @@ exports.getCardsOfPokemon= function(req, res) {
     var request1 = sync_request('GET', "https://api.pokemontcg.io/v1/cards?nationalPokedexNumber="+ id );
     var data_pokemon = JSON.parse(request1.getBody());
 
+    var request2 = sync_request('GET', "https://pokeapi.co/api/v2/pokemon/" + id + "/");
+    var data_pokemon2 = JSON.parse(request2.getBody());
+
     var pokemon_card = data_pokemon.cards[0].imageUrl;
-    res.json({"card": pokemon_card});
+    res.json({
+        "id": id,
+        "name": data_pokemon2.name,
+        "image": "https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/" + id + ".png",
+        "card": pokemon_card
+    });
 
 
 }

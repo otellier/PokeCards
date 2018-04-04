@@ -7,7 +7,7 @@ module.exports = function (app) {
 
     app.route('/pokemon/list').get(pokemonController.getAll);
     app.route('/pokemon/list/:token').get(pokemonController.getCardsOfUser);
-    app.route('/pokemon/:id').get(pokemonController.getCardsOfPokemon);
+    app.route('/pokemon/details/:id').get(pokemonController.getCardsOfPokemon);
     app.route('/pokemon/booster/:generation/:token').get(pokemonController.getBooster);
     app.route('/pokemon/exchange').get(pokemonController.getExchange);
     app.route('/pokemon/exchange/new').post(pokemonController.postExchange);
