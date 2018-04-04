@@ -25,7 +25,9 @@ exports.newUser = function(req, res) {
             var user = result;
             console.log(user.length);
             if (user.length  > 0) {
-                res.json(null);
+                res.json({
+                    success: false
+                });
             } else {
                 console.log("NOT IN DB");
                 connection_mysql.query("INSERT INTO user (username, coins, token_facebook) VALUES ('" + req.body.username + "', 50," + req.body.token + ")", function (err, result, fields) {
